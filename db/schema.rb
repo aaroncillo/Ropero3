@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_08_200334) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_08_210557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,62 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_08_200334) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "clients", force: :cascade do |t|
+    t.string "name"
+    t.text "address"
+    t.string "phone"
+    t.string "rut"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_clients_on_company_id"
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name_company"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_companies_on_user_id"
+  end
+
+  create_table "inversions", force: :cascade do |t|
+    t.string "name_inversion"
+    t.text "description_inversion"
+    t.integer "precio_inversion"
+    t.date "fecha_inversion"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_inversions_on_company_id"
+  end
+
+  create_table "pagos", force: :cascade do |t|
+    t.string "name_gasto"
+    t.text "description_gasto"
+    t.integer "precio_gasto"
+    t.date "fecha_gasto"
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_pagos_on_company_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "disfraz"
+    t.text "agregado"
+    t.integer "valor"
+    t.integer "garantia"
+    t.date "init_date"
+    t.date "end_date"
+    t.string "estado"
+    t.date "reserva_date"
+    t.bigint "client_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_products_on_client_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -56,4 +112,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_08_200334) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "clients", "companies"
+  add_foreign_key "companies", "users"
+  add_foreign_key "inversions", "companies"
+  add_foreign_key "pagos", "companies"
+  add_foreign_key "products", "clients"
 end
