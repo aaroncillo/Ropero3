@@ -95,3 +95,5 @@ gem "sentry-rails", "~> 5.10"
 gem "chartkick"
 
 gem "groupdate"
+
+gem 'esbuild-rails'
