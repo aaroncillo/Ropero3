@@ -30,10 +30,11 @@ class CompaniesController < ApplicationController
 
 
     filtered = Client.joins(:products)
-    .where('products.updated_at >= ?', Time.now - 7.days)
     .where(company_id: @company.id)
+    .where('products.updated_at >= ? OR clients.id IS NOT NULL', Time.now - 7.days)
     .group('clients.id')
     .order('MAX(products.updated_at) DESC')
+
 
     if params[:filter].present?
       filtered = filtered.where("name ILIKE ?", "%#{params[:filter]}%")
